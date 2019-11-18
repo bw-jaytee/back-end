@@ -164,7 +164,16 @@ public class UserServiceImpl implements UserService
                                                   ue.getUseremail()));
                 }
             }
-
+            if (user.getUsereatz()
+                    .size() > 0)
+            {
+                for (Useremail ue : user.getUseremails())
+                {
+                    currentUser.getUseremails()
+                            .add(new Useremail(currentUser,
+                                    ue.getUseremail()));
+                }
+            }
             return userrepos.save(currentUser);
         } else
         {

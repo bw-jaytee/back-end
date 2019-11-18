@@ -65,6 +65,20 @@ public class User extends Auditable
     @JsonIgnoreProperties("user")
     private List<Useremail> useremails = new ArrayList<>();
 
+    public List<Eatz> getUsereatz() {
+        return usereatz;
+    }
+
+    public void setUsereatz(List<Eatz> usereatz) {
+        this.usereatz = usereatz;
+    }
+
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @JsonIgnoreProperties("user")
+    private List<Eatz> usereatz = new ArrayList<>();
+
     public User()
     {
     }
@@ -135,6 +149,19 @@ public class User extends Auditable
     {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.password = passwordEncoder.encode(password);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userid=" + userid +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", primaryemail='" + primaryemail + '\'' +
+                ", userroles=" + userroles +
+                ", useremails=" + useremails +
+                ", usereatz=" + usereatz +
+                '}';
     }
 
     public void setPasswordNotEncrypt(String password)

@@ -64,9 +64,10 @@ public class EatzServiceImpl implements EatzService {
         newEatz.setFats(eatz.getFats());
         newEatz.setProteins(eatz.getProteins());
 
+
         return eatzRepository.save(newEatz);
     }
-    
+
     @Transactional
     @Override
     public Eatz update(Eatz eatz, long id) {
