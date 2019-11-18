@@ -32,4 +32,7 @@ public interface UserService
                      long roleid);
 
     List<UserNameCountEmails> getCountUserEmails();
+
+     User updateEatz(User user,
+                           long id);
 }

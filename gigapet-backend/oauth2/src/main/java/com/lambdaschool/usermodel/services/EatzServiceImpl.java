@@ -64,7 +64,7 @@ public class EatzServiceImpl implements EatzService {
         newEatz.setFats(eatz.getFats());
         newEatz.setProteins(eatz.getProteins());
 
-
+        newEatz.setUser(eatz.getUser());
         return eatzRepository.save(newEatz);
     }
 

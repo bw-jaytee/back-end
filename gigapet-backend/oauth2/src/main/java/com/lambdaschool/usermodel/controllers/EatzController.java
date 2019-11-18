@@ -72,10 +72,14 @@ public class EatzController {
                                                       Eatz newEatz, Authentication authentication) throws URISyntaxException
     {
         User user = userService.findByName(authentication.getName());
-        System.out.println(user.toString());
 
+        newEatz.setUser(user);
+        System.out.println(newEatz.toString());
         newEatz = eatzService.save(newEatz);
+
         user.getUsereatz().add(newEatz);
+        System.out.println(user.toString());
+        userService.updateEatz(user,user.getUserid());
         // set the location header for the newly created resource
         HttpHeaders responseHeaders = new HttpHeaders();
 

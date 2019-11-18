@@ -3,10 +3,8 @@ package com.lambdaschool.usermodel.services;
 import com.lambdaschool.usermodel.exceptions.ResourceFoundException;
 import com.lambdaschool.usermodel.exceptions.ResourceNotFoundException;
 import com.lambdaschool.usermodel.logging.Loggable;
-import com.lambdaschool.usermodel.models.Role;
-import com.lambdaschool.usermodel.models.User;
-import com.lambdaschool.usermodel.models.UserRoles;
-import com.lambdaschool.usermodel.models.Useremail;
+import com.lambdaschool.usermodel.models.*;
+import com.lambdaschool.usermodel.repository.EatzRepository;
 import com.lambdaschool.usermodel.repository.RoleRepository;
 import com.lambdaschool.usermodel.repository.UserRepository;
 import com.lambdaschool.usermodel.view.UserNameCountEmails;
@@ -32,6 +30,8 @@ public class UserServiceImpl implements UserService
     private UserRepository userrepos;
     @Autowired
     private RoleRepository rolerepos;
+    @Autowired
+    private EatzRepository eatzRepository;
 
     public User findUserById(long id) throws ResourceNotFoundException
     {
@@ -112,10 +112,41 @@ public class UserServiceImpl implements UserService
                    .add(new Useremail(newUser,
                                       ue.getUseremail()));
         }
+        ArrayList<Eatz> newEatz = new ArrayList<>();
+        for (Eatz e : user.getUsereatz())
+        {
+            long id = e.getEatzid();
+            Eatz eatz = eatzRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("eatz id " + id + " not found!"));
+            newEatz.add(eatz);
+        }
+        newUser.setUsereatz(newEatz);
 
         return userrepos.save(newUser);
     }
+    @Transactional
+    @Override
+    public User updateEatz(User user,
+                       long id) {
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
 
+        User authenticatedUser = userrepos.findByUsername(authentication.getName());
+
+        if (id == authenticatedUser.getUserid()) {
+        /*    if (user.getUsereatz().size() > 0)
+            {
+                for (Eatz e : user.getUsereatz())
+                {
+                    user.getUsereatz().add(new Eatz(e.getTitle(),e.getCarbs(),e.getProteins(),e.getFats()));
+                }
+            }*/
+            return userrepos.save(user);
+        }else
+        {
+            throw new ResourceNotFoundException(id + " Not current user");
+        }
+    }
     @Transactional
     @Override
     public User update(User user,
@@ -172,6 +203,13 @@ public class UserServiceImpl implements UserService
                     currentUser.getUseremails()
                             .add(new Useremail(currentUser,
                                     ue.getUseremail()));
+                }
+            }
+            if (user.getUsereatz().size() > 0)
+            {
+                for (Eatz e : user.getUsereatz())
+                {
+                    currentUser.getUsereatz().add(new Eatz(e.getTitle(),e.getCarbs(),e.getProteins(),e.getFats()));
                 }
             }
             return userrepos.save(currentUser);

@@ -59,7 +59,7 @@ public class Eatz extends Auditable {
     @ManyToOne
     @JoinColumn(name = "userid",
             nullable = true)
-    @JsonIgnoreProperties("useremails")
+    @JsonIgnoreProperties("usereatz")
     private User user;
     /*
     * {
@@ -87,12 +87,11 @@ public class Eatz extends Auditable {
     public Eatz() {
     }
 
-    public Eatz(String title, int carbs, int proteins, int fats, User user) {
+    public Eatz(String title, int carbs, int proteins, int fats) {
         this.title = title;
         this.carbs = carbs;
         this.proteins = proteins;
         this.fats = fats;
-        this.user = user;
     }
 
     public Date getCreatedDate() {
@@ -141,6 +140,18 @@ public class Eatz extends Auditable {
 
     public void setFats(int fats) {
         this.fats = fats;
+    }
+
+    @Override
+    public String toString() {
+        return "Eatz{" +
+                "eatzid=" + eatzid +
+                ", title='" + title + '\'' +
+                ", carbs=" + carbs +
+                ", proteins=" + proteins +
+                ", fats=" + fats +
+                ", user=" + user +
+                '}';
     }
 }
 /*
