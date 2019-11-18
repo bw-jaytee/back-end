@@ -51,7 +51,9 @@ public class Swagger2Config
                                                             new Tag("LogoutEndpoint",
                                                                     "Endpoint for logging out a user"),
                                                             new Tag("OpenEndpoint",
-                                                                    "Endpoints available to all"));
+                                                                    "Endpoints available to all"),
+                                                              new Tag("EatzEndpoint",
+                                                                      "Endpoints for CRUDing eatz"));
 
     }
 

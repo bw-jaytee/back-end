@@ -59,6 +59,13 @@ public class Eatz extends Auditable {
     public Eatz() {
     }
 
+    public Eatz(String title, int carbs, int proteins, int fats) {
+        this.title = title;
+        this.carbs = carbs;
+        this.proteins = proteins;
+        this.fats = fats;
+    }
+
     public Date getCreatedDate() {
         return createdDate;
     }
