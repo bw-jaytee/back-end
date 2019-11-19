@@ -32,10 +32,10 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 
 
 
-@Loggable
+
 @Entity
 @Table(name = "eatz")
-public class Eatz extends Auditable {
+public class Eatz  extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long eatzid;
@@ -56,10 +56,10 @@ public class Eatz extends Auditable {
     @Column(nullable = false)
     private int fats;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid",
-            nullable = true)
-    @JsonIgnoreProperties("usereatz")
+            nullable = false)
+    @JsonIgnoreProperties("usereatz")//({"usereatz", "hibernateLazyInitializer"})
     private User user;
     /*
     * {
@@ -81,12 +81,11 @@ public class Eatz extends Auditable {
     public Eatz() {
     }
 
-    public Eatz(String title, int carbs, int proteins, int fats, User user) {
+    public Eatz(String title, int carbs, int proteins, int fats) {
         this.title = title;
         this.carbs = carbs;
         this.proteins = proteins;
         this.fats = fats;
-        this.user = user;
     }
 
     public Date getCreatedDate() {

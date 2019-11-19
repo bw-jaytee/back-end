@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface UserRepository extends PagingAndSortingRepository<User, Long>
 {
+    User findUserByUserid(long userid);
     User findByUsername(String username);
 
     List<User> findByUsernameContainingIgnoreCase(String name,

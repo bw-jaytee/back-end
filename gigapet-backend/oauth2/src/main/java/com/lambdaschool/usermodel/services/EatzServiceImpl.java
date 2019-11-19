@@ -3,11 +3,13 @@ package com.lambdaschool.usermodel.services;
 import com.lambdaschool.usermodel.logging.Loggable;
 import com.lambdaschool.usermodel.models.Eatz;
 import com.lambdaschool.usermodel.repository.EatzRepository;
+import com.lambdaschool.usermodel.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 @Loggable
@@ -19,7 +21,7 @@ public class EatzServiceImpl implements EatzService {
     private EatzRepository eatzRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
     @Override
     public List<Eatz> findAll() {
         List<Eatz> list = new ArrayList<>();
@@ -44,7 +46,7 @@ public class EatzServiceImpl implements EatzService {
 
         return eatz;
     }
-
+    @Transactional
     @Override
     public void delete(long id) {
         if (eatzRepository.findById(id).isPresent())
@@ -59,7 +61,7 @@ public class EatzServiceImpl implements EatzService {
 
     @Transactional
     @Override
-    public Eatz save(Eatz eatz,long id) {
+    public Eatz save(@NotNull Eatz eatz, long id) {
         Eatz newEatz = new Eatz();
 
         newEatz.setTitle(eatz.getTitle());
@@ -67,13 +69,13 @@ public class EatzServiceImpl implements EatzService {
         newEatz.setFats(eatz.getFats());
         newEatz.setProteins(eatz.getProteins());
 
-        newEatz.setUser(userService.findUserById(id));
+        newEatz.setUser(userRepository.findUserByUserid(id));
         return eatzRepository.save(newEatz);
     }
 
     @Transactional
     @Override
-    public Eatz update(Eatz eatz, long id) {
+    public Eatz update(@NotNull Eatz eatz, long id) {
         Eatz currentEatz = eatzRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Long.toString(id)));
 
@@ -87,8 +89,9 @@ public class EatzServiceImpl implements EatzService {
         currentEatz.setCarbs(eatz.getCarbs());
 
         currentEatz.setFats(eatz.getFats());
-        currentEatz.setUser(userService.findUserById(id));
+        currentEatz.setUser(userRepository.findUserByUserid(id));
 
+        System.out.println(currentEatz.toString());
         return eatzRepository.save(currentEatz);
     }
 }

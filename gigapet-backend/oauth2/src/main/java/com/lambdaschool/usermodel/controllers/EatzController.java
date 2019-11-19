@@ -27,10 +27,10 @@ import java.util.List;
 @Loggable
 @RestController
 @RequestMapping("/eatz")
-@Api(tags = {"EatzEndpoint"})
+//@Api(tags = {"EatzEndpoint"})
 public class EatzController {
 
-    private static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
+   // private static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     @Autowired
     private EatzService eatzService;
@@ -73,9 +73,9 @@ public class EatzController {
     {
         User user = userService.findByName(authentication.getName());
 
-        System.out.println(newEatz.toString());
-      newEatz = eatzService.save(newEatz,user.getUserid());
 
+      newEatz = eatzService.save(newEatz,user.getUserid());
+        System.out.println(newEatz.toString());
         return new ResponseEntity<>(newEatz, HttpStatus.CREATED);
     }
     /* Eatz finalEatz = eatzService.findEatzById(newEatz.getEatzid());

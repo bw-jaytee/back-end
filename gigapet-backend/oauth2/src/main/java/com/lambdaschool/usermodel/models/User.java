@@ -65,6 +65,10 @@ public class User extends Auditable
     @JsonIgnoreProperties("user")
     private List<Useremail> useremails = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("user")
+    private List<Eatz> usereatz = new ArrayList<>();
     public List<Eatz> getUsereatz() {
         return usereatz;
     }
@@ -72,12 +76,8 @@ public class User extends Auditable
     public void setUsereatz(List<Eatz> usereatz) {
         this.usereatz = usereatz;
     }
+    public void addEatz(Eatz eatz){this.usereatz.add(eatz);}
 
-    @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    @JsonIgnoreProperties("user")
-    private List<Eatz> usereatz = new ArrayList<>();
 
     public User()
     {

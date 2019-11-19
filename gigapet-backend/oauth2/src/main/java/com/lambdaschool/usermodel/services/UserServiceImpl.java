@@ -27,15 +27,15 @@ public class UserServiceImpl implements UserService
     @Autowired
     UserAuditing userAuditing;
     @Autowired
-    private UserRepository userrepos;
+    private UserRepository userRepository;
     @Autowired
-    private RoleRepository rolerepos;
+    private RoleRepository roleRepository;
     @Autowired
     private EatzRepository eatzRepository;
 
     public User findUserById(long id) throws ResourceNotFoundException
     {
-        return userrepos.findById(id)
+        return userRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("User id " + id + " not found!"));
     }
 
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService
     public List<User> findByNameContaining(String username,
                                            Pageable pageable)
     {
-        return userrepos.findByUsernameContainingIgnoreCase(username.toLowerCase(),
+        return userRepository.findByUsernameContainingIgnoreCase(username.toLowerCase(),
                                                             pageable);
     }
 
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService
     public List<User> findAll(Pageable pageable)
     {
         List<User> list = new ArrayList<>();
-        userrepos.findAll(pageable)
+        userRepository.findAll(pageable)
                  .iterator()
                  .forEachRemaining(list::add);
         return list;
@@ -61,15 +61,15 @@ public class UserServiceImpl implements UserService
     @Override
     public void delete(long id)
     {
-        userrepos.findById(id)
+        userRepository.findById(id)
                  .orElseThrow(() -> new ResourceNotFoundException("User id " + id + " not found!"));
-        userrepos.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     @Override
     public User findByName(String name)
     {
-        User uu = userrepos.findByUsername(name.toLowerCase());
+        User uu = userRepository.findByUsername(name.toLowerCase());
         if (uu == null)
         {
             throw new ResourceNotFoundException("User name " + name + " not found!");
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService
     @Override
     public User save(User user)
     {
-        if (userrepos.findByUsername(user.getUsername()
+        if (userRepository.findByUsername(user.getUsername()
                                          .toLowerCase()) != null)
         {
             throw new ResourceFoundException(user.getUsername() + " is already taken!");
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService
         {
             long id = ur.getRole()
                         .getRoleid();
-            Role role = rolerepos.findById(id)
+            Role role = roleRepository.findById(id)
                                  .orElseThrow(() -> new ResourceNotFoundException("Role id " + id + " not found!"));
             newRoles.add(new UserRoles(newUser,
                                        role));
@@ -113,18 +113,18 @@ public class UserServiceImpl implements UserService
                                       ue.getUseremail()));
         }
         ArrayList<Eatz> newEatz = new ArrayList<>();
-        for (Eatz e : user.getUsereatz())
+     /*   for (Eatz e : user.getUsereatz())
         {
             long id = e.getEatzid();
             Eatz eatz = eatzRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("eatz id " + id + " not found!"));
             newEatz.add(eatz);
         }
-        newUser.setUsereatz(newEatz);
+        newUser.setUsereatz(newEatz);*/
 
-        return userrepos.save(newUser);
+        return userRepository.save(newUser);
     }
-    @Transactional
+ /*   @Transactional
     @Override
     public User updateEatz(User user,
                        long id) {
@@ -164,7 +164,7 @@ public class UserServiceImpl implements UserService
         {
             throw new ResourceNotFoundException(id + " Not current user");
         }
-    }
+    }*/
     @Transactional
     @Override
     public User update(User user,
@@ -174,7 +174,7 @@ public class UserServiceImpl implements UserService
         Authentication authentication = SecurityContextHolder.getContext()
                                                              .getAuthentication();
 
-        User authenticatedUser = userrepos.findByUsername(authentication.getName());
+        User authenticatedUser = userRepository.findByUsername(authentication.getName());
 
         if (id == authenticatedUser.getUserid() || isAdmin)
         {
@@ -217,10 +217,12 @@ public class UserServiceImpl implements UserService
             {
                 for (Eatz e : user.getUsereatz())
                 {
-                    currentUser.getUsereatz().add(new Eatz(e.getTitle(),e.getCarbs(),e.getProteins(),e.getFats(),currentUser));
+                    Eatz newEats = new Eatz(e.getTitle(),e.getCarbs(),e.getProteins(),e.getFats());
+                    newEats.setUser(currentUser);
+                    currentUser.getUsereatz().add(newEats);
                 }
             }
-            return userrepos.save(currentUser);
+            return userRepository.save(currentUser);
         } else
         {
             throw new ResourceNotFoundException(id + " Not current user");
@@ -232,16 +234,16 @@ public class UserServiceImpl implements UserService
     public void deleteUserRole(long userid,
                                long roleid)
     {
-        userrepos.findById(userid)
+        userRepository.findById(userid)
                  .orElseThrow(() -> new ResourceNotFoundException("User id " + userid + " not found!"));
-        rolerepos.findById(roleid)
+        roleRepository.findById(roleid)
                  .orElseThrow(() -> new ResourceNotFoundException("Role id " + roleid + " not found!"));
 
-        if (rolerepos.checkUserRolesCombo(userid,
+        if (roleRepository.checkUserRolesCombo(userid,
                                           roleid)
                      .getCount() > 0)
         {
-            rolerepos.deleteUserRoles(userid,
+            roleRepository.deleteUserRoles(userid,
                                       roleid);
         } else
         {
@@ -254,16 +256,16 @@ public class UserServiceImpl implements UserService
     public void addUserRole(long userid,
                             long roleid)
     {
-        userrepos.findById(userid)
+        userRepository.findById(userid)
                  .orElseThrow(() -> new ResourceNotFoundException("User id " + userid + " not found!"));
-        rolerepos.findById(roleid)
+        roleRepository.findById(roleid)
                  .orElseThrow(() -> new ResourceNotFoundException("Role id " + roleid + " not found!"));
 
-        if (rolerepos.checkUserRolesCombo(userid,
+        if (roleRepository.checkUserRolesCombo(userid,
                                           roleid)
                      .getCount() <= 0)
         {
-            rolerepos.insertUserRoles(userAuditing.getCurrentAuditor()
+            roleRepository.insertUserRoles(userAuditing.getCurrentAuditor()
                                                   .get(),
                                       userid,
                                       roleid);
@@ -276,6 +278,6 @@ public class UserServiceImpl implements UserService
     @Override
     public List<UserNameCountEmails> getCountUserEmails()
     {
-        return userrepos.getCountUserEmails();
+        return userRepository.getCountUserEmails();
     }
 }
