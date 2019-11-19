@@ -2,6 +2,7 @@ package com.lambdaschool.usermodel.services;
 
 import com.lambdaschool.usermodel.logging.Loggable;
 import com.lambdaschool.usermodel.models.Eatz;
+import com.lambdaschool.usermodel.models.User;
 import com.lambdaschool.usermodel.repository.EatzRepository;
 import com.lambdaschool.usermodel.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-@Loggable
+
 @Transactional
 @Service(value = "eatzService")
 public class EatzServiceImpl implements EatzService {
@@ -41,7 +42,7 @@ public class EatzServiceImpl implements EatzService {
 
         if (eatz == null)
         {
-            throw new EntityNotFoundException("Restaurant " + title + " not found!");
+            throw new EntityNotFoundException("eatz " + title + " not found!");
         }
 
         return eatz;
@@ -59,9 +60,8 @@ public class EatzServiceImpl implements EatzService {
         }
     }
 
-    @Transactional
     @Override
-    public Eatz save(@NotNull Eatz eatz, long id) {
+    public Eatz save(@NotNull Eatz eatz, User user) {
         Eatz newEatz = new Eatz();
 
         newEatz.setTitle(eatz.getTitle());
@@ -69,7 +69,7 @@ public class EatzServiceImpl implements EatzService {
         newEatz.setFats(eatz.getFats());
         newEatz.setProteins(eatz.getProteins());
 
-        newEatz.setUser(userRepository.findUserByUserid(id));
+        newEatz.setUser(user);
         return eatzRepository.save(newEatz);
     }
 

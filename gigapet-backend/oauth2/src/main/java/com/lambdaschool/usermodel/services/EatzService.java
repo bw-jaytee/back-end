@@ -1,6 +1,7 @@
 package com.lambdaschool.usermodel.services;
 
 import com.lambdaschool.usermodel.models.Eatz;
+import com.lambdaschool.usermodel.models.User;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface EatzService {
 
     void delete(long id);
 
-    Eatz save(Eatz eatz,long id);
+    Eatz save(Eatz eatz, User user);
 
     Eatz update(Eatz eatz, long id);
 }

@@ -1,13 +1,11 @@
 package com.lambdaschool.usermodel.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.lambdaschool.usermodel.logging.Loggable;
+import io.swagger.annotations.ApiModel;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static javax.persistence.TemporalType.TIMESTAMP;
 
@@ -32,10 +30,11 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 
 
 
-
+@ApiModel(value = "Eatz",
+        description = "Describes a meal for a gigapet")
 @Entity
 @Table(name = "eatz")
-public class Eatz  extends Auditable{
+public class Eatz extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long eatzid;

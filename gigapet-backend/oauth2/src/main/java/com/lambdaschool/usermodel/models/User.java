@@ -69,6 +69,8 @@ public class User extends Auditable
             cascade = CascadeType.ALL)
     @JsonIgnoreProperties("user")
     private List<Eatz> usereatz = new ArrayList<>();
+
+
     public List<Eatz> getUsereatz() {
         return usereatz;
     }
@@ -76,7 +78,7 @@ public class User extends Auditable
     public void setUsereatz(List<Eatz> usereatz) {
         this.usereatz = usereatz;
     }
-    public void addEatz(Eatz eatz){this.usereatz.add(eatz);}
+  //  public void addEatz(Eatz eatz){this.usereatz.add(eatz);}
 
 
     public User()
@@ -151,18 +153,6 @@ public class User extends Auditable
         this.password = passwordEncoder.encode(password);
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userid=" + userid +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", primaryemail='" + primaryemail + '\'' +
-                ", userroles=" + userroles +
-                ", useremails=" + useremails +
-                ", usereatz=" + usereatz +
-                '}';
-    }
 
     public void setPasswordNotEncrypt(String password)
     {

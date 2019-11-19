@@ -81,9 +81,4 @@ public class UserRoles extends Auditable implements Serializable
                             getRole());
     }
 
-    @Override
-    public String toString()
-    {
-        return "UserRoles{" + "user=" + user.getUserid() + ", role=" + role.getRoleid() + '}';
-    }
 }

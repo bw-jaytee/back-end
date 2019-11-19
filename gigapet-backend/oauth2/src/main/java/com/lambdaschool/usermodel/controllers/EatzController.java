@@ -22,10 +22,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Loggable
-@RestController
+@Controller
 @RequestMapping("/eatz")
 //@Api(tags = {"EatzEndpoint"})
 public class EatzController {
@@ -44,17 +45,18 @@ public class EatzController {
         return new ResponseEntity<>(myEatz, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/eatz/{eatzId}",
+    @GetMapping(value = "/id/{eatzId}",
             produces = {"application/json"})
     public ResponseEntity<?> getEatzById(
             @PathVariable
                     Long eatzId)
     {
-        Eatz e = eatzService.findEatzById(eatzId);
+     //   Eatz e = eatzService.findEatzById(eatzId);
+        ArrayList e = new ArrayList<Eatz>();
         return new ResponseEntity<>(e, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/eatz/name/{title}",
+    @GetMapping(value = "/name/{title}",
             produces = {"application/json"})
     public ResponseEntity<?> getEatzByName(
             @PathVariable
@@ -64,7 +66,7 @@ public class EatzController {
         return new ResponseEntity<>(e, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/eatz",
+    @PostMapping(value = "/create",
             consumes = {"application/json"},
             produces = {"application/json"})
     public ResponseEntity<?> addNewEatz(@Valid
@@ -73,22 +75,22 @@ public class EatzController {
     {
         User user = userService.findByName(authentication.getName());
 
+        HttpHeaders responseHeaders = new HttpHeaders();
 
-      newEatz = eatzService.save(newEatz,user.getUserid());
+        URI newEatzURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{eatztid}").buildAndExpand(newEatz.getEatzid()).toUri();
+        responseHeaders.setLocation(newEatzURI);
+      newEatz = eatzService.save(newEatz,user);
         System.out.println(newEatz.toString());
-        return new ResponseEntity<>(newEatz, HttpStatus.CREATED);
+        return new ResponseEntity<>(newEatz, responseHeaders, HttpStatus.OK);
     }
     /* Eatz finalEatz = eatzService.findEatzById(newEatz.getEatzid());
         user.getUsereatz().add(newEatz);
           System.out.println(user.toString());
           userService.updateEatz(user,user.getUserid());*/
     // set the location header for the newly created resource
-       /* HttpHeaders responseHeaders = new HttpHeaders();
-
-        URI newEatzURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{eatztid}").buildAndExpand(newEatz.getEatzid()).toUri();
-        responseHeaders.setLocation(newEatzURI);*/
-    /*, responseHeaders*/
-    @PutMapping(value = "/eatz/{eatzid}")
+       /* */
+    /**/
+    @PutMapping(value = "/update/{eatzid}")
     public ResponseEntity<?> updateEatz(
             @RequestBody
                     Eatz updateEatz,
@@ -99,12 +101,12 @@ public class EatzController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/eatz/{eatzidid}")
+    @DeleteMapping("/delete/{eatzid}")
     public ResponseEntity<?> deleteEatzById(
             @PathVariable
-                    long eatzidid)
+                    long eatzid)
     {
-        eatzService.delete(eatzidid);
+        eatzService.delete(eatzid);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
