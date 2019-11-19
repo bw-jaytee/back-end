@@ -39,7 +39,7 @@ public class EatzController {
     @Autowired
     private UserService userService;
 
-    @GetMapping(value = "/alleatz",produces = {"application/json"})
+    @GetMapping(value = "/alleatzforuser",produces = {"application/json"})
     public ResponseEntity<?> listAllEatz(
             Authentication authentication) {
         User user = userService.findByName(authentication.getName());

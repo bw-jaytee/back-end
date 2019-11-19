@@ -51,9 +51,9 @@ public class User extends Auditable
     private String password;
 
     @Column(nullable = false,
-            unique = true)
-    @Email(message = "Email should be valid format username@domain.toplevel")
-    private String primaryemail;
+            unique = false)
+    //@Email(message = "Full name must not be blank")
+    private String fullname;
 
     @OneToMany(mappedBy = "user",
                cascade = CascadeType.ALL)
@@ -88,12 +88,12 @@ public class User extends Auditable
 
     public User(String username,
                 String password,
-                String primaryemail,
+                String fullname,
                 List<UserRoles> userRoles)
     {
         setUsername(username);
         setPassword(password);
-        this.primaryemail = primaryemail;
+        this.fullname = fullname;
         for (UserRoles ur : userRoles)
         {
             ur.setUser(this);
@@ -127,20 +127,20 @@ public class User extends Auditable
         this.username = username.toLowerCase();
     }
 
-    public String getPrimaryemail()
+    public String getFullname()
     {
-        if (primaryemail == null) // this is possible when updating a user
+        if (fullname == null) // this is possible when updating a user
         {
             return null;
         } else
         {
-            return primaryemail.toLowerCase();
+            return fullname;
         }
     }
 
-    public void setPrimaryemail(String primaryemail)
+    public void setFullname(String fullname)
     {
-        this.primaryemail = primaryemail.toLowerCase();
+        this.fullname = fullname.toLowerCase();
     }
 
     public String getPassword()
