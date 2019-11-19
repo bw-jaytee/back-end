@@ -134,14 +134,32 @@ public class UserServiceImpl implements UserService
         User authenticatedUser = userrepos.findByUsername(authentication.getName());
 
         if (id == authenticatedUser.getUserid()) {
-        /*    if (user.getUsereatz().size() > 0)
+            User currentUser = findUserById(id);
+
+            if (user.getUsername() != null)
+            {
+                currentUser.setUsername(user.getUsername()
+                        .toLowerCase());
+            }
+
+            if (user.getPassword() != null)
+            {
+                currentUser.setPasswordNotEncrypt(user.getPassword());
+            }
+
+            if (user.getPrimaryemail() != null)
+            {
+                currentUser.setPrimaryemail(user.getPrimaryemail()
+                        .toLowerCase());
+            }
+            if (user.getUsereatz().size() > 0)
             {
                 for (Eatz e : user.getUsereatz())
                 {
-                    user.getUsereatz().add(new Eatz(e.getTitle(),e.getCarbs(),e.getProteins(),e.getFats()));
+                    currentUser.getUsereatz().add(new Eatz(e.getTitle(),e.getCarbs(),e.getProteins(),e.getFats(),currentUser));
                 }
-            }*/
-            return userrepos.save(user);
+            }
+            return userrepos.save(currentUser);
         }else
         {
             throw new ResourceNotFoundException(id + " Not current user");
@@ -195,21 +213,11 @@ public class UserServiceImpl implements UserService
                                                   ue.getUseremail()));
                 }
             }
-            if (user.getUsereatz()
-                    .size() > 0)
-            {
-                for (Useremail ue : user.getUseremails())
-                {
-                    currentUser.getUseremails()
-                            .add(new Useremail(currentUser,
-                                    ue.getUseremail()));
-                }
-            }
             if (user.getUsereatz().size() > 0)
             {
                 for (Eatz e : user.getUsereatz())
                 {
-                    currentUser.getUsereatz().add(new Eatz(e.getTitle(),e.getCarbs(),e.getProteins(),e.getFats()));
+                    currentUser.getUsereatz().add(new Eatz(e.getTitle(),e.getCarbs(),e.getProteins(),e.getFats(),currentUser));
                 }
             }
             return userrepos.save(currentUser);

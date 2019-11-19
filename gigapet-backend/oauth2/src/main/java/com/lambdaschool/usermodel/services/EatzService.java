@@ -13,7 +13,7 @@ public interface EatzService {
 
     void delete(long id);
 
-    Eatz save(Eatz eatz);
+    Eatz save(Eatz eatz,long id);
 
     Eatz update(Eatz eatz, long id);
 }

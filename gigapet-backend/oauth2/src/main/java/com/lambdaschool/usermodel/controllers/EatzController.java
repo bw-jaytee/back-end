@@ -73,22 +73,21 @@ public class EatzController {
     {
         User user = userService.findByName(authentication.getName());
 
-        newEatz.setUser(user);
         System.out.println(newEatz.toString());
-        newEatz = eatzService.save(newEatz);
+      newEatz = eatzService.save(newEatz,user.getUserid());
 
+        return new ResponseEntity<>(newEatz, HttpStatus.CREATED);
+    }
+    /* Eatz finalEatz = eatzService.findEatzById(newEatz.getEatzid());
         user.getUsereatz().add(newEatz);
-        System.out.println(user.toString());
-        userService.updateEatz(user,user.getUserid());
-        // set the location header for the newly created resource
-        HttpHeaders responseHeaders = new HttpHeaders();
+          System.out.println(user.toString());
+          userService.updateEatz(user,user.getUserid());*/
+    // set the location header for the newly created resource
+       /* HttpHeaders responseHeaders = new HttpHeaders();
 
         URI newEatzURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{eatztid}").buildAndExpand(newEatz.getEatzid()).toUri();
-        responseHeaders.setLocation(newEatzURI);
-
-        return new ResponseEntity<>(newEatz, responseHeaders, HttpStatus.CREATED);
-    }
-
+        responseHeaders.setLocation(newEatzURI);*/
+    /*, responseHeaders*/
     @PutMapping(value = "/eatz/{eatzid}")
     public ResponseEntity<?> updateEatz(
             @RequestBody

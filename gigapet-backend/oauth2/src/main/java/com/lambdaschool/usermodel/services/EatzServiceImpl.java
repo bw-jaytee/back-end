@@ -1,5 +1,6 @@
 package com.lambdaschool.usermodel.services;
 
+import com.lambdaschool.usermodel.logging.Loggable;
 import com.lambdaschool.usermodel.models.Eatz;
 import com.lambdaschool.usermodel.repository.EatzRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-
+@Loggable
 @Transactional
 @Service(value = "eatzService")
 public class EatzServiceImpl implements EatzService {
@@ -17,6 +18,8 @@ public class EatzServiceImpl implements EatzService {
     @Autowired
     private EatzRepository eatzRepository;
 
+    @Autowired
+    private UserService userService;
     @Override
     public List<Eatz> findAll() {
         List<Eatz> list = new ArrayList<>();
@@ -56,7 +59,7 @@ public class EatzServiceImpl implements EatzService {
 
     @Transactional
     @Override
-    public Eatz save(Eatz eatz) {
+    public Eatz save(Eatz eatz,long id) {
         Eatz newEatz = new Eatz();
 
         newEatz.setTitle(eatz.getTitle());
@@ -64,7 +67,7 @@ public class EatzServiceImpl implements EatzService {
         newEatz.setFats(eatz.getFats());
         newEatz.setProteins(eatz.getProteins());
 
-        newEatz.setUser(eatz.getUser());
+        newEatz.setUser(userService.findUserById(id));
         return eatzRepository.save(newEatz);
     }
 
@@ -79,14 +82,12 @@ public class EatzServiceImpl implements EatzService {
             currentEatz.setTitle(eatz.getTitle());
         }
 
-
-        // should never be null as they're ints a
-            currentEatz.setProteins(eatz.getProteins());
+        currentEatz.setProteins(eatz.getProteins());
 
         currentEatz.setCarbs(eatz.getCarbs());
 
         currentEatz.setFats(eatz.getFats());
-
+        currentEatz.setUser(userService.findUserById(id));
 
         return eatzRepository.save(currentEatz);
     }

@@ -40,10 +40,10 @@ public class Eatz extends Auditable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long eatzid;
 
-  /*  @CreatedDate
+    @CreatedDate
     @Temporal(TIMESTAMP)
     private Date createdDate;
-*/
+
     @Column(nullable = false)
     private String title;
 
@@ -56,7 +56,7 @@ public class Eatz extends Auditable {
     @Column(nullable = false)
     private int fats;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid",
             nullable = true)
     @JsonIgnoreProperties("usereatz")
@@ -68,12 +68,6 @@ public class Eatz extends Auditable {
     *   "protiens": 3,
     *   "fats" : 3
     * }
-    *{
-  "access_token": "string",
-  "expires_in": 0,
-  "scope": "string",
-  "token_type": "string"
-}
     * */
 
     public User getUser() {
@@ -87,11 +81,12 @@ public class Eatz extends Auditable {
     public Eatz() {
     }
 
-    public Eatz(String title, int carbs, int proteins, int fats) {
+    public Eatz(String title, int carbs, int proteins, int fats, User user) {
         this.title = title;
         this.carbs = carbs;
         this.proteins = proteins;
         this.fats = fats;
+        this.user = user;
     }
 
     public Date getCreatedDate() {

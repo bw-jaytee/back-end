@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Loggable
+/*@Loggable
 @Entity
 @Table(name = "usereatz",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"userid", "eatzid"})})
@@ -76,3 +76,4 @@ public class UserEatz implements Serializable {
                 '}';
     }
 }
+*/
