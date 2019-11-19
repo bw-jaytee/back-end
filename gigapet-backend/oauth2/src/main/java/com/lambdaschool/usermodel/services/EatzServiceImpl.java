@@ -91,7 +91,7 @@ public class EatzServiceImpl implements EatzService {
         currentEatz.setFats(eatz.getFats());
         currentEatz.setUser(userRepository.findUserByUserid(currentEatz.getUser().getUserid()));
 
-        System.out.println(currentEatz.toString());
+       // System.out.println(currentEatz.toString());
         return eatzRepository.save(currentEatz);
     }
 }

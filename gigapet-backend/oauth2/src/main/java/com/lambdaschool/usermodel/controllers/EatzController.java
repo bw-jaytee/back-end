@@ -100,8 +100,8 @@ public class EatzController {
             @PathVariable
                     long eatzid)
     {
-        eatzService.update(updateEatz, eatzid);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Eatz eatz = eatzService.update(updateEatz, eatzid);
+        return new ResponseEntity<>(eatz, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{eatzid}")
