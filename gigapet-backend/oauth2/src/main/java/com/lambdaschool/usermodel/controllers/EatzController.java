@@ -51,8 +51,8 @@ public class EatzController {
             @PathVariable
                     Long eatzId)
     {
-     //   Eatz e = eatzService.findEatzById(eatzId);
-        ArrayList e = new ArrayList<Eatz>();
+        Eatz e = eatzService.findEatzById(eatzId);
+        //ArrayList e = new ArrayList<Eatz>();
         return new ResponseEntity<>(e, HttpStatus.OK);
     }
 
@@ -71,7 +71,8 @@ public class EatzController {
             produces = {"application/json"})
     public ResponseEntity<?> addNewEatz(@Valid
                                               @RequestBody
-                                                      Eatz newEatz, Authentication authentication) throws URISyntaxException
+                                                      Eatz newEatz,
+                                        Authentication authentication) throws URISyntaxException
     {
         User user = userService.findByName(authentication.getName());
 
@@ -79,7 +80,7 @@ public class EatzController {
 
         URI newEatzURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{eatztid}").buildAndExpand(newEatz.getEatzid()).toUri();
         responseHeaders.setLocation(newEatzURI);
-      newEatz = eatzService.save(newEatz,user);
+        newEatz = eatzService.save(newEatz,user);
         System.out.println(newEatz.toString());
         return new ResponseEntity<>(newEatz, responseHeaders, HttpStatus.OK);
     }

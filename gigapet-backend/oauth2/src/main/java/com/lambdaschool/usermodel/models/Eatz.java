@@ -34,6 +34,7 @@ import static javax.persistence.TemporalType.TIMESTAMP;
         description = "Describes a meal for a gigapet")
 @Entity
 @Table(name = "eatz")
+
 public class Eatz extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
