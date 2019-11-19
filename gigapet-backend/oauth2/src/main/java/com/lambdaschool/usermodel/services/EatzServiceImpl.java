@@ -37,8 +37,8 @@ public class EatzServiceImpl implements EatzService {
     }
 
     @Override
-    public Eatz findEatztByTitle(String title) {
-        Eatz eatz = eatzRepository.findByTitle(title);
+    public List<Eatz> findEatztByTitle(String title) {
+        List<Eatz> eatz = eatzRepository.findByTitle(title);
 
         if (eatz == null)
         {
@@ -89,7 +89,7 @@ public class EatzServiceImpl implements EatzService {
         currentEatz.setCarbs(eatz.getCarbs());
 
         currentEatz.setFats(eatz.getFats());
-        currentEatz.setUser(userRepository.findUserByUserid(id));
+        currentEatz.setUser(userRepository.findUserByUserid(currentEatz.getUser().getUserid()));
 
         System.out.println(currentEatz.toString());
         return eatzRepository.save(currentEatz);

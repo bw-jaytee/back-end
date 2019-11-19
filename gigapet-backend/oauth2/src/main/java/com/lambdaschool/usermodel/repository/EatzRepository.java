@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface EatzRepository extends CrudRepository<Eatz, Long> {
-    Eatz findByTitle(String title);
+    List<Eatz> findByTitle(String title);
 
 }

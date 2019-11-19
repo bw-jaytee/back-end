@@ -40,8 +40,10 @@ public class EatzController {
     private UserService userService;
 
     @GetMapping(value = "/alleatz",produces = {"application/json"})
-    public ResponseEntity<?> listAllEatz() {
-        List<Eatz> myEatz = eatzService.findAll();
+    public ResponseEntity<?> listAllEatz(
+            Authentication authentication) {
+        User user = userService.findByName(authentication.getName());
+        List<Eatz> myEatz = user.getUsereatz();
         return new ResponseEntity<>(myEatz, HttpStatus.OK);
     }
 
@@ -62,7 +64,7 @@ public class EatzController {
             @PathVariable
                     String title)
     {
-        Eatz e = eatzService.findEatztByTitle(title);
+        List<Eatz> e = eatzService.findEatztByTitle(title);
         return new ResponseEntity<>(e, HttpStatus.OK);
     }
 

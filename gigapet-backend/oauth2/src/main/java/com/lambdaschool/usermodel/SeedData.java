@@ -3,10 +3,8 @@ package com.lambdaschool.usermodel;
 import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
-import com.lambdaschool.usermodel.models.Role;
-import com.lambdaschool.usermodel.models.User;
-import com.lambdaschool.usermodel.models.UserRoles;
-import com.lambdaschool.usermodel.models.Useremail;
+import com.lambdaschool.usermodel.models.*;
+import com.lambdaschool.usermodel.services.EatzService;
 import com.lambdaschool.usermodel.services.RoleService;
 import com.lambdaschool.usermodel.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,9 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 @Transactional
 @Component
@@ -26,6 +26,9 @@ public class SeedData implements CommandLineRunner
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    EatzService eatzService;
 
 
     @Override
@@ -58,6 +61,7 @@ public class SeedData implements CommandLineRunner
           .add(new Useremail(u1,
                              "admin@mymail.local"));
 
+
         userService.save(u1);
 
         // data, user
@@ -66,7 +70,7 @@ public class SeedData implements CommandLineRunner
                                 r3));
         datas.add(new UserRoles(new User(),
                                 r2));
-        User u2 = new User("cinnamon",
+    /*    User u2 = new User("cinnamon",
                            "1234567",
                            "cinnamon@lambdaschool.local",
                            datas);
@@ -82,9 +86,7 @@ public class SeedData implements CommandLineRunner
         userService.save(u2);
 
         // user
-        ArrayList<UserRoles> users = new ArrayList<>();
-        users.add(new UserRoles(new User(),
-                                r2));
+
         User u3 = new User("barnbarn",
                            "ILuvM4th!",
                            "barnbarn@lambdaschool.local",
@@ -110,11 +112,12 @@ public class SeedData implements CommandLineRunner
                            "password",
                            "misskitty@school.lambda",
                            users);
-        userService.save(u5);
+        userService.save(u5);*/
 
         // using JavaFaker create a bunch of regular users
         // https://www.baeldung.com/java-faker
         // https://www.baeldung.com/regular-expressions-java
+        ArrayList<UserRoles> users = new ArrayList<>();
 
         FakeValuesService fakeValuesService = new FakeValuesService(new Locale("en-US"),
                                                                     new RandomService());
@@ -134,10 +137,23 @@ public class SeedData implements CommandLineRunner
                                 nameFaker.internet()
                                          .emailAddress(),
                                 users);
+            Random random = new Random();
+            List<Eatz> mListEatz = new ArrayList<Eatz>();
+
+            fakeUser.setUsereatz(mListEatz);
             fakeUser.getUseremails()
                     .add(new Useremail(fakeUser,
                                        fakeValuesService.bothify("????##@gmail.com")));
             userService.save(fakeUser);
+            for (int j = 0; j < 3; j++) {
+                if (random.nextInt(10)>=5) {
+                    int carbs = random.nextInt(10);
+                    int proteins = random.nextInt(10);
+                    int fats = random.nextInt(10);
+                    Eatz eatz = new Eatz(nameFaker.name().toString(), carbs, proteins, fats);
+                    eatzService.save(eatz,userService.findByName(fakeUser.getUsername()));
+                }
+            }
         }
     }
 }

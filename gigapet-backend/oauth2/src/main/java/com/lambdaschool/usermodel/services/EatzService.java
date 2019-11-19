@@ -10,7 +10,7 @@ public interface EatzService {
 
     Eatz findEatzById(long id);
 
-    Eatz findEatztByTitle(String name);
+    List<Eatz> findEatztByTitle(String name);
 
     void delete(long id);
 
