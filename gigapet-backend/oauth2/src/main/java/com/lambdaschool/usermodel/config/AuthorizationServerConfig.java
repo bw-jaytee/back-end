@@ -23,7 +23,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     static final String SCOPE_READ = "read";
     static final String SCOPE_WRITE = "write";
     static final String TRUST = "trust";
-    static final int ACCESS_TOKEN_VALIDITY_SECONDS = 1 * 60 * 60; // hour
+    static final int ACCESS_TOKEN_VALIDITY_SECONDS = 72 * 60 * 60; // 72 hours
 
     @Autowired
     private TokenStore tokenStore;

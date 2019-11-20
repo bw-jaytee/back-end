@@ -25,6 +25,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
 @Loggable
 @RestController
 @Api(tags = {"OpenEndpoint"})
@@ -100,7 +103,7 @@ public class OpenController
         {
             // return the access token
             RestTemplate restTemplate = new RestTemplate();
-            String requestURI = "http://" + httpServletRequest.getServerName() + getPort(httpServletRequest) + "/login";
+            String requestURI = "http://" + httpServletRequest.getServerName() /*+ getPort(httpServletRequest)*/ + "/login";
 
             List<MediaType> acceptableMediaTypes = new ArrayList<>();
             acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
@@ -143,3 +146,63 @@ public class OpenController
         logger.trace("favicon.ico endpoint accessed!");
     }
 }
+/*
+
+supposedly may be issues with open controller specifically in regards to redirect (so far been fine)
+and password getting
+
+
+@RestController
+
+
+
+public class OpenController
+{
+    private static final Logger logger = LoggerFactory.getLogger(OpenController.class);
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RoleService roleService;
+    // Create the user and Return the access token
+    // http://localhost:2019/createnewuser
+    // Just create the user
+    // http://localhost:2019/createnewuser?access=false
+    //
+    // {
+    //     "username" : "Mojo",
+    //     "password" : "corgie",
+    //     "primaryemail" : "home@local.house"
+    // }
+    @PostMapping(value = "/createnewuser",
+                 consumes = {"application/json"},
+                 produces = {"application/json"})
+    public ResponseEntity<?> addNewUser(HttpServletRequest httpServletRequest,
+                                        @RequestParam(defaultValue = "true")
+                                                boolean getaccess,
+                                        @Valid
+                                        @RequestBody
+                                                User user) throws URISyntaxException
+    {
+        // Create the user
+        User newuser = new User();
+        newuser.setUsername(user.getUsername());
+        newuser.setPasswordNoEncrypt(user.getPassword());
+        newuser.setEmail(user.getEmail());
+        ArrayList<UserRoles> newRoles = new ArrayList<>();
+        newRoles.add(new UserRoles(newuser, roleService.findByName("user")));
+        newuser.setUserroles(newRoles);
+        newuser = userService.save(newuser);
+        // set the location header for the newly created resource - to another controller!
+        HttpHeaders responseHeaders = new HttpHeaders();
+        URI newUserURI = ServletUriComponentsBuilder.fromUriString(httpServletRequest.getServerName() + ":" + httpServletRequest.getLocalPort() + "/users/user/{userId}")
+                                                    .buildAndExpand(newuser.getUserid())
+                                                    .toUri();
+        responseHeaders.setLocation(newUserURI);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    @GetMapping("favicon.ico")
+    void returnNoFavicon()
+    {
+        logger.trace("favicon.ico endpoint accessed!");
+    }
+}*/

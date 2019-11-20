@@ -18,7 +18,7 @@ import java.util.Locale;
 import java.util.Random;
 
 @Transactional
-@Component
+//@Component
 public class SeedData implements CommandLineRunner
 {
     @Autowired

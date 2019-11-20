@@ -77,12 +77,12 @@ public class EatzController {
                                         Authentication authentication) throws URISyntaxException
     {
         User user = userService.findByName(authentication.getName());
-
+        newEatz = eatzService.save(newEatz,user);
         HttpHeaders responseHeaders = new HttpHeaders();
 
         URI newEatzURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{eatztid}").buildAndExpand(newEatz.getEatzid()).toUri();
         responseHeaders.setLocation(newEatzURI);
-        newEatz = eatzService.save(newEatz,user);
+
         System.out.println(newEatz.toString());
         return new ResponseEntity<>(newEatz, responseHeaders, HttpStatus.OK);
     }
