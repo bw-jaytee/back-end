@@ -293,11 +293,66 @@ public void getEatzById() throws Exception
             er,
             tr);
 }
+
+    @Test
+    public void getEatzByIdNotFound() throws Exception
+    {
+        String apiUrl = "/eatz/id/66666666";
+        Mockito.when(eatzService.findEatzById(66666666))
+                .thenReturn(null);
+
+        RequestBuilder rb = MockMvcRequestBuilders.get(apiUrl)
+                .accept(MediaType.APPLICATION_JSON);
+        MvcResult r = mockMvc.perform(rb)
+                .andReturn(); // this could throw an exception
+        String tr = r.getResponse()
+                .getContentAsString();
+
+        String er = "";
+
+        System.out.println("Expect: " + er);
+        System.out.println("Actual: " + tr);
+
+        assertEquals("Rest API Returns List",
+                er,
+                tr);
+    }
                     /*
     public ResponseEntity<?> getEatzByName(
             @PathVariable
                     String title)
+*/
+                    @Test
+                    public void getEatzByName() throws Exception
+                    {
+                        String apiUrl = "/eatz/name/title2";
+                        List<Eatz> properReturn = new ArrayList<Eatz>();
+                        properReturn.add(userList.get(0).getUsereatz().get(1));
+                        Mockito.when(eatzService.findEatztByTitle("title2"))
+                                .thenReturn(properReturn);
 
+                        RequestBuilder rb = MockMvcRequestBuilders.get(apiUrl)
+                                .accept(MediaType.APPLICATION_JSON);
+                        MvcResult r = mockMvc.perform(rb)
+                                .andReturn(); // this could throw an exception
+                        String tr = r.getResponse()
+                                .getContentAsString();
+
+                        ObjectMapper mapper = new ObjectMapper();
+                        List<Eatz> expected=new ArrayList<Eatz>();
+                        expected.add(userList.get(0).getUsereatz().get(1));
+                        String er = mapper.writeValueAsString(expected);
+
+                        System.out.println("Expect: " + er);
+                        System.out.println("Actual: " + tr);
+
+                        assertEquals("Rest API Returns List",
+                                er,
+                                tr);
+                    }
+
+
+                    /*
        public ResponseEntity<?> updateEatz(
             @RequestBody
                     Eatz updateEatz,
