@@ -94,9 +94,12 @@ public class EatzControllerUnitTests {
         List<Eatz> listEatz = new ArrayList<Eatz>();
         Eatz eatz1 = new Eatz("title1",1,1,1);
         eatz1.setUser(u1);
+        eatz1.setEatzid(100);
         Eatz eatz2 = new Eatz("title2",2,2,2);
         eatz2.setUser(u1);
+        eatz2.setEatzid(200);
         Eatz eatz3 = new Eatz("title3",3,3,3);
+        eatz3.setEatzid(300);
         eatz3.setUser(u1);
         listEatz.add(eatz1);
         listEatz.add(eatz2);
@@ -234,24 +237,23 @@ public class EatzControllerUnitTests {
     }
 
     @Test
-    public void listReallyAllUsers() throws Exception
+    public void listReallyAllEatz() throws Exception
     {
-        String apiUrl = "/users/allusers";
+        String apiUrl = "/eatz/alleatzforuser";
 
-        Mockito.when(userService.findAll(Pageable.unpaged()))
-                .thenReturn(userList);
+        Mockito.when(userService.findByName("admin"))
+                .thenReturn(userList.get(0));
 
         RequestBuilder rb = MockMvcRequestBuilders.get(apiUrl)
                 .accept(MediaType.APPLICATION_JSON);
 
-        // the following actually performs a real controller call
         MvcResult r = mockMvc.perform(rb)
-                .andReturn(); // this could throw an exception
+                .andReturn();
         String tr = r.getResponse()
                 .getContentAsString();
 
         ObjectMapper mapper = new ObjectMapper();
-        String er = mapper.writeValueAsString(userList);
+        String er = mapper.writeValueAsString(userList.get(0).getUsereatz());
 
         System.out.println("Expect: " + er);
         System.out.println("Actual: " + tr);
@@ -265,7 +267,33 @@ public class EatzControllerUnitTests {
     public ResponseEntity<?> getEatzById(
             @PathVariable
                     Long eatzId)
-                    *
+                    */
+@Test
+public void getEatzById() throws Exception
+{
+    String apiUrl = "/eatz/id/200";
+
+    Mockito.when(eatzService.findEatzById(200))
+            .thenReturn(userList.get(0).getUsereatz().get(1));
+
+    RequestBuilder rb = MockMvcRequestBuilders.get(apiUrl)
+            .accept(MediaType.APPLICATION_JSON);
+    MvcResult r = mockMvc.perform(rb)
+            .andReturn(); //
+    String tr = r.getResponse()
+            .getContentAsString();
+
+    ObjectMapper mapper = new ObjectMapper();
+    String er = mapper.writeValueAsString(userList.get(0).getUsereatz().get(1));
+
+    System.out.println("Expect: " + er);
+    System.out.println("Actual: " + tr);
+
+    assertEquals("Rest API Returns List",
+            er,
+            tr);
+}
+                    /*
     public ResponseEntity<?> getEatzByName(
             @PathVariable
                     String title)
