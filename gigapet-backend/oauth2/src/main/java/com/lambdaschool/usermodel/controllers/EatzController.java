@@ -42,7 +42,8 @@ public class EatzController {
     @GetMapping(value = "/alleatzforuser",produces = {"application/json"})
     public ResponseEntity<?> listAllEatz(
             Authentication authentication) {
-        User user = userService.findByName(authentication.getName());
+        String username =authentication.getName();
+        User user = userService.findByName(username);
         List<Eatz> myEatz = user.getUsereatz();
         return new ResponseEntity<>(myEatz, HttpStatus.OK);
     }
