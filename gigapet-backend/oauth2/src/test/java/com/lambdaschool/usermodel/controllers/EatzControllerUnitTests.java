@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -31,6 +32,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -351,6 +354,40 @@ public void getEatzById() throws Exception
                                 tr);
                     }
 
+/*   public ResponseEntity<?> addNewEatz(@Valid
+                                              @RequestBody
+                                                      Eatz newEatz,
+                                        Authentication authentication) throws URISyntaxException
+
+ */
+@Test
+public void createEatz() throws Exception
+{
+    String apiUrl = "/eatz/create";
+
+    // build a user
+    ArrayList<UserRoles> thisRole = new ArrayList<>();
+    ArrayList<Useremail> thisEmail = new ArrayList<>();
+    Eatz eatz = new Eatz("test",100,100,100);
+    eatz.setUser(userList.get(0));
+
+    ObjectMapper mapper = new ObjectMapper();
+    String userString = mapper.writeValueAsString(eatz);
+
+    Mockito.when(userService.findByName(any()))
+        .thenReturn(userList.get(0));
+    Mockito.when(eatzService.save(any(Eatz.class),eq(userList.get(0))))
+            .thenReturn(eatz);
+
+    RequestBuilder rb = MockMvcRequestBuilders.post(apiUrl)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .content(userString);
+
+    mockMvc.perform(rb)
+            .andExpect(status().isCreated())
+            .andDo(MockMvcResultHandlers.print());
+}
 
                     /*
        public ResponseEntity<?> updateEatz(
@@ -359,10 +396,7 @@ public void getEatzById() throws Exception
             @PathVariable
                     long eatzid)
 
-      public ResponseEntity<?> addNewEatz(@Valid
-                                              @RequestBody
-                                                      Eatz newEatz,
-                                        Authentication authentication) throws URISyntaxException
+
 
           public ResponseEntity<?> deleteEatzById(
             @PathVariable

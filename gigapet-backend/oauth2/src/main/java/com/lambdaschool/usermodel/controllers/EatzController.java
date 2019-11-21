@@ -85,7 +85,7 @@ public class EatzController {
         responseHeaders.setLocation(newEatzURI);
 
         System.out.println(newEatz.toString());
-        return new ResponseEntity<>(newEatz, responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(newEatz, responseHeaders, HttpStatus.CREATED);
     }
     /* Eatz finalEatz = eatzService.findEatzById(newEatz.getEatzid());
         user.getUsereatz().add(newEatz);
