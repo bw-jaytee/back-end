@@ -427,4 +427,25 @@ public void createEatz() throws Exception
                     long eatzid)
 
 * */
+
+    @Test
+    public void deleteEatz() throws Exception
+    {
+        String apiUrl = "/eatz/delete/200";
+
+    /*    Eatz eatz = new Eatz("test",200,200,200);
+        eatz.setUser(userList.get(0));*/
+
+                    /*    Mockito.when(userService.findByName(any()))
+                                .thenReturn(userList.get(0));*/
+        RequestBuilder rb = MockMvcRequestBuilders.delete(apiUrl,
+                "3")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(rb)
+                .andExpect(status().is2xxSuccessful())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
 }
