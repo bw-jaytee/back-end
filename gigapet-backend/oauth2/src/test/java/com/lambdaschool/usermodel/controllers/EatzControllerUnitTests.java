@@ -365,9 +365,6 @@ public void createEatz() throws Exception
 {
     String apiUrl = "/eatz/create";
 
-    // build a user
-    ArrayList<UserRoles> thisRole = new ArrayList<>();
-    ArrayList<Useremail> thisEmail = new ArrayList<>();
     Eatz eatz = new Eatz("test",100,100,100);
     eatz.setUser(userList.get(0));
 
@@ -395,7 +392,34 @@ public void createEatz() throws Exception
                     Eatz updateEatz,
             @PathVariable
                     long eatzid)
+*/
+                    @Test
+                    public void updateEatz() throws Exception
+                    {
+                        String apiUrl = "/eatz/update/200";
 
+                        Eatz eatz = new Eatz("test",200,200,200);
+                        eatz.setUser(userList.get(0));
+
+                        ObjectMapper mapper = new ObjectMapper();
+                        String userString = mapper.writeValueAsString(eatz);
+
+                    /*    Mockito.when(userService.findByName(any()))
+                                .thenReturn(userList.get(0));*/
+                        Mockito.when(eatzService.update(any(Eatz.class),eq(200)))
+                                .thenReturn(eatz);
+
+                        RequestBuilder rb = MockMvcRequestBuilders.put(apiUrl)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(userString);
+
+                        mockMvc.perform(rb)
+                                .andExpect(status().is2xxSuccessful())
+                                .andDo(MockMvcResultHandlers.print());
+                    }
+
+                    /*
 
 
           public ResponseEntity<?> deleteEatzById(
